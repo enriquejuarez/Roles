@@ -27,14 +27,22 @@
                 <a class="navbar-brand" href="{{ url('/') }}">
                     {{ config('app.name', 'Laravel') }}
                 </a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" ari a-controls="navbarSupportedContent" aria-expanded="false" aria-label="{{ __('Toggle navigation') }}">
                     <span class="navbar-toggler-icon"></span>
                 </button>
 
                 <div class="collapse navbar-collapse" id="navbarSupportedContent">
                     <!-- Left Side Of Navbar -->
                     <ul class="navbar-nav mr-auto">
-
+                        @can('products.index')
+                            <li><a class="nav-link" href="{{ route('products.index') }}">Productos</a></li>
+                        @endcan
+                        @can('roles.index')
+                            <li><a class="nav-link" href="{{ route('roles.index') }}">Roles</a></li>
+                        @endcan
+                        @can('users.index')
+                            <li><a class="nav-link" href="{{ route('users.index') }}">Usuarios</a></li>
+                        @endcan
                     </ul>
 
                     <!-- Right Side Of Navbar -->
