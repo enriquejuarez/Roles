@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\User;
+use Caffeinated\Shinobi\Models\Role;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -13,7 +15,9 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $users = User::paginate();
+
+        return view('users.index', compact('users'));
     }
 
     /**
@@ -23,7 +27,7 @@ class UserController extends Controller
      */
     public function create()
     {
-        //
+        return view('users.create');
     }
 
     /**
@@ -34,7 +38,10 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $user = User::create($request->all());
+
+        return redirect()->route('users.edit', $user->id)
+            ->with('info', 'Usuario guardado con éxito');
     }
 
     /**
@@ -43,9 +50,9 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function show($id)
+    public function show(User $user)
     {
-        //
+        return view('users.show', compact('user'));
     }
 
     /**
@@ -54,9 +61,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        //
+        $roles = Role::get();
+        return view('users.edit', compact('user', 'roles'));
     }
 
     /**
@@ -66,9 +74,16 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, User $user)
     {
-        //
+        //Actualiza User
+        $user->update($request->all());
+
+        //Actualiza Role
+        $user->roles()->sync($request->get('roles'));
+
+        return redirect()->route('users.edit', $user->id)
+            ->with('info', 'Usuario actualizado con éxito');
     }
 
     /**
@@ -77,8 +92,10 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(User $user)
     {
-        //
+        $user->delete();
+
+        return back()->with('info', 'Usuario eliminado correctamente');
     }
 }
